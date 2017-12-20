@@ -89,23 +89,6 @@ int getInput(char* string){
     return inputNum;
 }
 
-//int getDifficulty(){
-//    char inputString[128];
-//    int notValid = 1;
-//    int inputNum = 0;
-//    while (notValid) {
-//        scanf("%s", inputString);
-//        inputNum = atoi(inputString);
-//        if(inputNum < 1 || inputNum > 10){
-//            printf("Enter a difficulty between 1 and 10.\n");
-//        }
-//        else{
-//            notValid = 0;
-//        }
-//    }
-//    return inputNum;
-//}
-
 int main(){
     int rows, cols, difficultyLevel;
     rows = getInput("rows");
