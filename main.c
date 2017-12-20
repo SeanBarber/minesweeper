@@ -55,12 +55,50 @@ void setChar(BOARD* board, int row, int col, char character){
 	board->board[row][col] = character;
 }
 
+int getInput(char* string){
+    char inputString[128];
+    int notValid = 1;
+    int inputNum = 0;
+    while(notValid){
+        printf("Enter the number of %s between 1 and 99: ", string);
+        scanf("%s", inputString);
+        inputNum = atoi(inputString);
+        if(inputNum < 1 || inputNum > 99){
+            printf("Enter a %s size between 1 and 99.\n", string);
+        }
+        else{
+            notValid = 0;
+        }
+    }
+    return inputNum;
+}
+
+int getDifficulty(){
+    char inputString[128];
+    int notValid = 1;
+    int inputNum = 0;
+    while (notValid) {
+        printf("Enter a level of difficulty between 1 and 10: ");
+        scanf("%s", inputString);
+        inputNum = atoi(inputString);
+        if(inputNum < 1 || inputNum > 10){
+            printf("Enter a difficulty between 1 and 10.\n");
+        }
+        else{
+            notValid = 0;
+        }
+    }
+    return inputNum;
+}
 int main(){
-	
-	BOARD* board = initBoard(50,50,1);
-	printf("Display board.\n");
-	displayBoard(board);
-	setChar(board, 5,5,'a');
-	displayBoard(board);
+    int rows, cols, difficultyLevel;
+    rows = getInput("rows");
+    cols = getInput("columns");
+    difficultyLevel = getDifficulty();
+    BOARD* board = initBoard(rows, cols, difficultyLevel);
+    printf("Display board.\n");
+    displayBoard(board);
+    setChar(board, 5,5,'a');
+    displayBoard(board);
 	return 0;
 }
