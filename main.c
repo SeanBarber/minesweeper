@@ -28,24 +28,39 @@ BOARD* initBoard(int rows, int cols, int difficultyLevel){
 
 void displayBoard(BOARD* board){
 	int i, j;
-	printf("  ");
+	printf("   ");
 	for(i = 0; i < board->rows; i++){
 		printf("%d ", i);
+		if(i < 10){
+			printf(" ");
+		}
 	}
 	printf("\n");
 	for(i = 0; i < board->rows; i++){
-		printf("%c ", 65+i);
+		printf("%d ",i);
+		if(i < 10){
+			printf(" ");
+		}
 		for(j = 0; j < board->cols; j++){
-			printf("%c ", board->board[i][j]);
+			printf("%c  ", board->board[i][j]);
 		}
 		printf("\n");
 	}
 }
+
+void setChar(BOARD* board, int row, int col, char character){
+	if(row > board->rows || row < 1 || col > board->cols || col < 1){
+		printf("Row or column is not a valid spot.\n");
+	}
+	board->board[row][col] = character;
+}
+
 int main(){
 	
-	BOARD* board = initBoard(10,10,1);
+	BOARD* board = initBoard(50,50,1);
 	printf("Display board.\n");
 	displayBoard(board);
-
+	setChar(board, 5,5,'a');
+	displayBoard(board);
 	return 0;
 }
