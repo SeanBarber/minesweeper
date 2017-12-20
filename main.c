@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct board{
 	char **board;
@@ -60,45 +61,58 @@ int getInput(char* string){
     int notValid = 1;
     int inputNum = 0;
     while(notValid){
-        printf("Enter the number of %s between 1 and 99: ", string);
-        scanf("%s", inputString);
-        inputNum = atoi(inputString);
-        if(inputNum < 1 || inputNum > 99){
-            printf("Enter a %s size between 1 and 99.\n", string);
+        if (strcmp(string, "difficulty") == 0) {
+            printf("Enter a level of difficulty between 1 and 10: ");
         }
         else{
-            notValid = 0;
+            printf("Enter the number of %s between 1 and 99: ", string);
+        }
+        scanf("%s", inputString);
+        inputNum = atoi(inputString);
+        if (strcmp(string, "difficulty") == 0) {
+            if(inputNum < 1 || inputNum > 10){
+                printf("Enter a difficulty between 1 and 10.\n");
+            }
+            else{
+                notValid = 0;
+            }
+        }
+        else{
+            if(inputNum < 1 || inputNum > 99){
+                printf("Enter a %s size between 1 and 99.\n", string);
+            }
+            else{
+                notValid = 0;
+            }
         }
     }
     return inputNum;
 }
 
-int getDifficulty(){
-    char inputString[128];
-    int notValid = 1;
-    int inputNum = 0;
-    while (notValid) {
-        printf("Enter a level of difficulty between 1 and 10: ");
-        scanf("%s", inputString);
-        inputNum = atoi(inputString);
-        if(inputNum < 1 || inputNum > 10){
-            printf("Enter a difficulty between 1 and 10.\n");
-        }
-        else{
-            notValid = 0;
-        }
-    }
-    return inputNum;
-}
+//int getDifficulty(){
+//    char inputString[128];
+//    int notValid = 1;
+//    int inputNum = 0;
+//    while (notValid) {
+//        scanf("%s", inputString);
+//        inputNum = atoi(inputString);
+//        if(inputNum < 1 || inputNum > 10){
+//            printf("Enter a difficulty between 1 and 10.\n");
+//        }
+//        else{
+//            notValid = 0;
+//        }
+//    }
+//    return inputNum;
+//}
+
 int main(){
     int rows, cols, difficultyLevel;
     rows = getInput("rows");
     cols = getInput("columns");
-    difficultyLevel = getDifficulty();
+    difficultyLevel = getInput("difficulty");
     BOARD* board = initBoard(rows, cols, difficultyLevel);
     printf("Display board.\n");
-    displayBoard(board);
-    setChar(board, 5,5,'a');
     displayBoard(board);
 	return 0;
 }
