@@ -28,16 +28,22 @@ BOARD* initBoard(int rows, int cols, int difficultyLevel){
 
 void displayBoard(BOARD* board){
 	int i, j;
+	printf("  ");
 	for(i = 0; i < board->rows; i++){
+		printf("%d ", i);
+	}
+	printf("\n");
+	for(i = 0; i < board->rows; i++){
+		printf("%c ", 65+i);
 		for(j = 0; j < board->cols; j++){
-			printf("%c", board->board[i][j]);
+			printf("%c ", board->board[i][j]);
 		}
 		printf("\n");
 	}
 }
 int main(){
 	
-	BOARD* board = initBoard(5,5,1);
+	BOARD* board = initBoard(10,10,1);
 	printf("Display board.\n");
 	displayBoard(board);
 
