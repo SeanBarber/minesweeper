@@ -49,19 +49,31 @@ void displayBoard(BOARD* board){
 	}
 }
 
+/*
+ Function Name: setChar
+ Passed: The board in use, the row and column to put the character
+ Returns: void
+ */
+
 void setChar(BOARD* board, int row, int col, char character){
-	if(row > board->rows || row < 1 || col > board->cols || col < 1){
+	if(row > board->rows || row < 1 || col > board->cols || col < 1){ // simple error checking to see if the row or column is out of range
 		printf("Row or column is not a valid spot.\n");
 	}
 	board->board[row][col] = character;
 }
+
+/*
+ Function Name: getInput
+ Passed: A string that determines which input selection to be run
+ Returns: Integer between the specified range depending on the input
+*/
 
 int getInput(char* string){
     char inputString[128];
     int notValid = 1;
     int inputNum = 0;
     while(notValid){
-        if (strcmp(string, "difficulty") == 0) {
+        if (strcmp(string, "difficulty") == 0) { // Combining getting input required me to do this. Otherwise I have would have 2 nearly identitcal functions
             printf("Enter a level of difficulty between 1 and 10: ");
         }
         else{
