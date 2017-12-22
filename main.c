@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 typedef struct board{
 	char **playerBoard;
@@ -31,6 +32,31 @@ BOARD* initBoard(int rows, int cols, int difficultyLevel){
 	return board;
 }
 
+
+// TODO: I am currently thinking of a way to combine these 2 functions by passing a string of which board is wanted. But still do not know. 12-21-2017, Sean Barber.
+void displayActualBoard(BOARD* board){
+    int i, j;
+    printf("Display board.\n");
+    printf("   ");
+    for(i = 0; i < board->rows; i++){
+        printf("%d ", i);
+        if(i < 10){
+            printf(" ");
+        }
+    }
+    printf("\n");
+    for(i = 0; i < board->rows; i++){
+        printf("%d ",i);
+        if(i < 10){
+            printf(" ");
+        }
+        for(j = 0; j < board->cols; j++){
+            printf("%c  ", board->actualBoard[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 void displayPlayerBoard(BOARD* board){
 	int i, j;
     printf("Display board.\n");
@@ -54,6 +80,25 @@ void displayPlayerBoard(BOARD* board){
 	}
 }
 
+int validBoardPosition(BOARD* board, int row, int col){
+    if (row > board->rows - 1||
+        row < 0 ||
+        col > board->cols - 1||
+        col < 0) {
+        printf("Not a valid position.\nTry again.\n");
+        return 0;
+    }
+    if (board->actualBoard[row][col] == '.') {
+        return 1;
+    }
+    else if (board->actualBoard[row][col] == 'X'){
+        return -1;
+    }
+    else{
+        return 0;
+    }
+}
+
 /*
  Function Name: setChar
  Passed: The board in use, the row and column to put the character
@@ -61,10 +106,15 @@ void displayPlayerBoard(BOARD* board){
  */
 
 void setChar(BOARD* board, int row, int col, char character){
-	if(row > board->rows || row < 1 || col > board->cols || col < 1){ // simple error checking to see if the row or column is out of range
-		printf("Row or column is not a valid spot.\n");
-	}
+    if(validBoardPosition(board, row, col) == 0){
+        return;
+    }
+    if (validBoardPosition(board, row, col) == -1) {
+        displayActualBoard(board);
+        exit(0);
+    }
 	board->playerBoard[row][col] = character;
+    board->actualBoard[row][col] = character;
 }
 
 /*
@@ -106,23 +156,51 @@ int getBoardCreationInput(char* string){
     return inputNum;
 }
 
-int validBoardPosition(BOARD* board, int row, int col){
-    if (row > board->rows ||
-        row < 1 ||
-        col > board->cols ||
-        col < 1) {
-        printf("Not a valid position.\nTry again.\n");
+void setBoard(BOARD* board){
+    int mines = ((board->rows)*(board->cols))/board->difficultyLevel;
+    if (board->difficultyLevel == 1) {
+        mines -= 25;
     }
+    int randRow, randCol;
+    while (mines != 0) {
+        randRow = rand() % board->rows;
+        randCol = rand() % board->cols;
+        printf("board->actualBoard[randRow][randCol] = %d\n", board->actualBoard[randRow][randCol]);
+        if (board->actualBoard[randRow][randCol] != ' ' &&
+            board->actualBoard[randRow][randCol] != 'X' &&
+            board->actualBoard[randRow][randCol] != '1' &&
+            board->actualBoard[randRow][randCol] != '2' &&
+            board->actualBoard[randRow][randCol] != '3' &&
+            board->actualBoard[randRow][randCol] != '4' &&
+            board->actualBoard[randRow][randCol] != '5' &&
+            board->actualBoard[randRow][randCol] != '6' &&
+            board->actualBoard[randRow][randCol] != '7' &&
+            board->actualBoard[randRow][randCol] != '8') {
+            board->actualBoard[randRow][randCol] = 'X';
+        }
+        mines--;
+    }
+    //TODO: set area around bombs to certain the number of spaces being touched
 }
 
+
 int main(){
+    srand(time(NULL));
     BOARD* board = initBoard(getBoardCreationInput("rows"), getBoardCreationInput("columns"), getBoardCreationInput("difficulty"));
     displayPlayerBoard(board);
-    int row, col;
-    scanf("%d %d", &row, &col);
+    char* inputString;
+    char* parsedInput;
+    int row = 0, col = 0;
     int notGameOver = 1;
+    scanf("%i %i", &row, &col);
+    setChar(board, row, col, ' ');
+    displayPlayerBoard(board);
+    setBoard(board);
+    displayActualBoard(board);
     while (notGameOver == 1) {
-        // execute command
+        scanf("%i %i", &row, &col);
+        setChar(board, row, col, ' ');
+        displayPlayerBoard(board);
     }
 	return 0;
 }
