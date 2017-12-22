@@ -3,6 +3,44 @@
 #include <string.h>
 #include <time.h>
 
+typedef struct node{
+    char character;
+    int row;
+    int col;
+    struct node *next;
+}NODE;
+
+typedef struct list{
+    NODE* head;
+    NODE* tail;
+    int n;
+}LIST;
+
+LIST* initList(){
+    LIST* list = malloc(sizeof(LIST));
+    list->head = NULL;
+    list->tail = NULL;
+    list->n = 0;
+    return list;
+}
+
+void insertInList(LIST* list, char character, int row, int col){
+    NODE* newNode = malloc(sizeof(NODE));
+    newNode->character = character;
+    newNode->row = row;
+    newNode->col = col;
+    newNode->next = NULL;
+    if (list->head == NULL) {
+        list->head = newNode;
+        list->tail = newNode;
+    }
+    else{
+        list->tail->next = newNode;
+        list->tail = newNode;
+    }
+    list->n++;
+}
+
 typedef struct board{
 	char **playerBoard;
     char **actualBoard;
@@ -26,7 +64,7 @@ BOARD* initBoard(int rows, int cols, int difficultyLevel){
 	for(i = 0; i < rows; i++){
 		for(j = 0; j < cols; j++){
 			board->playerBoard[i][j] = '.';
-            board->actualBoard[i][j] = '.';
+            board->actualBoard[i][j] = '0';
 		}
 	}
 	return board;
@@ -165,17 +203,8 @@ void setBoard(BOARD* board){
     while (mines != 0) {
         randRow = rand() % board->rows;
         randCol = rand() % board->cols;
-        printf("board->actualBoard[randRow][randCol] = %d\n", board->actualBoard[randRow][randCol]);
         if (board->actualBoard[randRow][randCol] != ' ' &&
-            board->actualBoard[randRow][randCol] != 'X' &&
-            board->actualBoard[randRow][randCol] != '1' &&
-            board->actualBoard[randRow][randCol] != '2' &&
-            board->actualBoard[randRow][randCol] != '3' &&
-            board->actualBoard[randRow][randCol] != '4' &&
-            board->actualBoard[randRow][randCol] != '5' &&
-            board->actualBoard[randRow][randCol] != '6' &&
-            board->actualBoard[randRow][randCol] != '7' &&
-            board->actualBoard[randRow][randCol] != '8') {
+            board->actualBoard[randRow][randCol] != 'X') {
             board->actualBoard[randRow][randCol] = 'X';
         }
         mines--;
