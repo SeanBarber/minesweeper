@@ -3,7 +3,8 @@
 #include <string.h>
 
 typedef struct board{
-	char **board;
+	char **playerBoard;
+    char **actualBoard;
 	int rows;
 	int cols;
 	int difficultyLevel;
@@ -14,21 +15,25 @@ BOARD* initBoard(int rows, int cols, int difficultyLevel){
 	board->rows = rows;
 	board->cols = cols;
 	board->difficultyLevel = difficultyLevel;
-	board->board = malloc(sizeof(char*)*rows);
+	board->playerBoard = malloc(sizeof(char*) * rows);
+    board->actualBoard = malloc(sizeof(char*) * rows);
 	int i, j;
 	for(i = 0; i < rows; i++){
-		board->board[i] = malloc(sizeof(char)*cols);
+		board->playerBoard[i] = malloc(sizeof(char) * cols);
+        board->actualBoard[i] = malloc(sizeof(char*) * cols);
 	}
 	for(i = 0; i < rows; i++){
 		for(j = 0; j < cols; j++){
-			board->board[i][j] = '.';
+			board->playerBoard[i][j] = '.';
+            board->actualBoard[i][j] = '.';
 		}
 	}
 	return board;
 }
 
-void displayBoard(BOARD* board){
+void displayPlayerBoard(BOARD* board){
 	int i, j;
+    printf("Display board.\n");
 	printf("   ");
 	for(i = 0; i < board->rows; i++){
 		printf("%d ", i);
@@ -43,7 +48,7 @@ void displayBoard(BOARD* board){
 			printf(" ");
 		}
 		for(j = 0; j < board->cols; j++){
-			printf("%c  ", board->board[i][j]);
+			printf("%c  ", board->playerBoard[i][j]);
 		}
 		printf("\n");
 	}
@@ -59,7 +64,7 @@ void setChar(BOARD* board, int row, int col, char character){
 	if(row > board->rows || row < 1 || col > board->cols || col < 1){ // simple error checking to see if the row or column is out of range
 		printf("Row or column is not a valid spot.\n");
 	}
-	board->board[row][col] = character;
+	board->playerBoard[row][col] = character;
 }
 
 /*
@@ -68,7 +73,7 @@ void setChar(BOARD* board, int row, int col, char character){
  Returns: Integer between the specified range depending on the input
 */
 
-int getInput(char* string){
+int getBoardCreationInput(char* string){
     char inputString[128];
     int notValid = 1;
     int inputNum = 0;
@@ -101,13 +106,23 @@ int getInput(char* string){
     return inputNum;
 }
 
+int validBoardPosition(BOARD* board, int row, int col){
+    if (row > board->rows ||
+        row < 1 ||
+        col > board->cols ||
+        col < 1) {
+        printf("Not a valid position.\nTry again.\n");
+    }
+}
+
 int main(){
-    int rows, cols, difficultyLevel;
-    rows = getInput("rows");
-    cols = getInput("columns");
-    difficultyLevel = getInput("difficulty");
-    BOARD* board = initBoard(rows, cols, difficultyLevel);
-    printf("Display board.\n");
-    displayBoard(board);
+    BOARD* board = initBoard(getBoardCreationInput("rows"), getBoardCreationInput("columns"), getBoardCreationInput("difficulty"));
+    displayPlayerBoard(board);
+    int row, col;
+    scanf("%d %d", &row, &col);
+    int notGameOver = 1;
+    while (notGameOver == 1) {
+        // execute command
+    }
 	return 0;
 }
