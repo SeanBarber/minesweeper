@@ -88,7 +88,15 @@ int validBoardPosition(BOARD* board, int row, int col){
         printf("Not a valid position.\nTry again.\n");
         return 0;
     }
-    if (board->actualBoard[row][col] == '0') {
+    if (board->actualBoard[row][col] == '0' ||
+        board->actualBoard[row][col] == '1' ||
+        board->actualBoard[row][col] == '2' ||
+        board->actualBoard[row][col] == '3' ||
+        board->actualBoard[row][col] == '4' ||
+        board->actualBoard[row][col] == '5' ||
+        board->actualBoard[row][col] == '6' ||
+        board->actualBoard[row][col] == '7' ||
+        board->actualBoard[row][col] == '8') {
         return 1;
     }
     else if (board->actualBoard[row][col] == 'X'){
@@ -105,16 +113,22 @@ int validBoardPosition(BOARD* board, int row, int col){
  Returns: void
  */
 
-void setChar(BOARD* board, int row, int col, char character){
+void setChar(BOARD* board, int row, int col, char character, int characterExists){
     if(validBoardPosition(board, row, col) == 0){
         return;
     }
     if (validBoardPosition(board, row, col) == -1) {
+        printf("You lost!\n");
         displayActualBoard(board);
         exit(0);
     }
-	board->playerBoard[row][col] = character;
-    board->actualBoard[row][col] = character;
+    if (characterExists == 0) {
+        board->playerBoard[row][col] = board->actualBoard[row][col];
+    }
+    else{
+        board->playerBoard[row][col] = character;
+        board->actualBoard[row][col] = character;
+    }
 }
 
 /*
@@ -166,8 +180,7 @@ void setBoard(BOARD* board){
         randRow = rand() % board->rows;
         randCol = rand() % board->cols;
         if (board->actualBoard[randRow][randCol] != ' ' &&
-            board->actualBoard[randRow][randCol] != 'X' &&
-            board) {
+            board->actualBoard[randRow][randCol] != 'X') {
             board->actualBoard[randRow][randCol] = 'X';
             if (randRow - 1 >= 0 && randCol - 1 >= 0) {
                 if (board->actualBoard[randRow-1][randCol-1] != 'X' &&
@@ -256,12 +269,12 @@ int main(){
     int row = 0, col = 0;
     int notGameOver = 1;
     scanf("%i %i", &row, &col);
-    setChar(board, row, col, ' ');
+    setChar(board, row, col, ' ', 1);
     setBoard(board);
-    displayActualBoard(board);
+    displayPlayerBoard(board);
     while (notGameOver == 1) {
         scanf("%i %i", &row, &col);
-        setChar(board, row, col, ' ');
+        setChar(board, row, col, ' ', 0);
         displayPlayerBoard(board);
     }
 	return 0;
