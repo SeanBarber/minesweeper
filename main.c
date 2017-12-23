@@ -3,44 +3,6 @@
 #include <string.h>
 #include <time.h>
 
-typedef struct node{
-    char character;
-    int row;
-    int col;
-    struct node *next;
-}NODE;
-
-typedef struct list{
-    NODE* head;
-    NODE* tail;
-    int n;
-}LIST;
-
-LIST* initList(){
-    LIST* list = malloc(sizeof(LIST));
-    list->head = NULL;
-    list->tail = NULL;
-    list->n = 0;
-    return list;
-}
-
-void insertInList(LIST* list, char character, int row, int col){
-    NODE* newNode = malloc(sizeof(NODE));
-    newNode->character = character;
-    newNode->row = row;
-    newNode->col = col;
-    newNode->next = NULL;
-    if (list->head == NULL) {
-        list->head = newNode;
-        list->tail = newNode;
-    }
-    else{
-        list->tail->next = newNode;
-        list->tail = newNode;
-    }
-    list->n++;
-}
-
 typedef struct board{
 	char **playerBoard;
     char **actualBoard;
@@ -126,7 +88,7 @@ int validBoardPosition(BOARD* board, int row, int col){
         printf("Not a valid position.\nTry again.\n");
         return 0;
     }
-    if (board->actualBoard[row][col] == '.') {
+    if (board->actualBoard[row][col] == '0') {
         return 1;
     }
     else if (board->actualBoard[row][col] == 'X'){
@@ -204,12 +166,64 @@ void setBoard(BOARD* board){
         randRow = rand() % board->rows;
         randCol = rand() % board->cols;
         if (board->actualBoard[randRow][randCol] != ' ' &&
-            board->actualBoard[randRow][randCol] != 'X') {
+            board->actualBoard[randRow][randCol] != 'X' &&
+            board) {
             board->actualBoard[randRow][randCol] = 'X';
+            if (randRow - 1 >= 0 && randCol - 1 >= 0) {
+                if (board->actualBoard[randRow-1][randCol-1] != 'X' &&
+                    board->actualBoard[randRow-1][randCol-1] != ' ') {
+                    board->actualBoard[randRow-1][randCol-1]++;
+                }
+                if (board->actualBoard[randRow-1][randCol] != 'X' &&
+                    board->actualBoard[randRow-1][randCol] != ' ') {
+                    board->actualBoard[randRow-1][randCol]++;
+                }
+                if (board->actualBoard[randRow][randCol-1] != 'X' &&
+                    board->actualBoard[randRow][randCol-1] != ' ') {
+                    board->actualBoard[randRow][randCol-1]++;
+                }
+            }
+            if (randRow + 1 < board->rows && randCol + 1 < board->cols) {
+                if (board->actualBoard[randRow+1][randCol+1] != 'X' &&
+                    board->actualBoard[randRow+1][randCol+1] != ' ') {
+                    board->actualBoard[randRow+1][randCol+1]++;
+                }
+                if (board->actualBoard[randRow+1][randCol] != 'X' &&
+                    board->actualBoard[randRow+1][randCol] != ' ') {
+                    board->actualBoard[randRow+1][randCol]++;
+                }
+                if (board->actualBoard[randRow][randCol+1] != 'X' &&
+                    board->actualBoard[randRow][randCol+1] != ' ') {
+                    board->actualBoard[randRow][randCol+1]++;
+                }
+            }
         }
         mines--;
     }
-    //TODO: set area around bombs to certain the number of spaces being touched
+    //TODO: set area around mines to certain the number of spaces being touched
+    
+    /*
+     0  1 2 3 4 5 6 7 8 9 10
+     1  0 X 0 0 0 0 0 0 0 0
+     2  0 0 0 0 X 0 0 X 0 0
+     3  0 0 0 X 0 0 0 X 0 X
+     4  X X 0 0 0 0 0 0 X 0
+     5  0 0 0 0 0 0 0 0 0 0
+     6  X 0 X 0 0 0 0 X 0 X
+     7  0 0 0 0 X 0 0 0 0 0
+     8  0 0 0 0 0 0 0 0 X 0
+     9  X 0 0 0 0 0 0 X 0 X
+     10 0 0 X 0 0 0 0 0 0 0
+     For checking around mine 5 2, check:
+        4 1
+        5 1
+        6 1
+        4 2
+        6 2
+        4 3
+        5 3
+        6 3
+     */
 }
 
 
@@ -223,7 +237,6 @@ int main(){
     int notGameOver = 1;
     scanf("%i %i", &row, &col);
     setChar(board, row, col, ' ');
-    displayPlayerBoard(board);
     setBoard(board);
     displayActualBoard(board);
     while (notGameOver == 1) {
