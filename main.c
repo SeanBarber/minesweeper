@@ -170,7 +170,7 @@ int getBoardCreationInput(char* string){
     return inputNum;
 }
 
-void setBoard(BOARD* board){
+void setBoard(BOARD* board, int row, int col){
     int mines = ((board->rows)*(board->cols))/board->difficultyLevel;
     if (board->difficultyLevel == 1) {
         mines -= 25;
@@ -179,6 +179,10 @@ void setBoard(BOARD* board){
     while (mines != 0) {
         randRow = rand() % board->rows;
         randCol = rand() % board->cols;
+        if (randRow == row ||
+            randCol == col) {
+            continue;
+        }
         if (board->actualBoard[randRow][randCol] != ' ' &&
             board->actualBoard[randRow][randCol] != 'X') {
             board->actualBoard[randRow][randCol] = 'X';
@@ -269,8 +273,8 @@ int main(){
     int row = 0, col = 0;
     int notGameOver = 1;
     scanf("%i %i", &row, &col);
-    setChar(board, row, col, ' ', 1);
-    setBoard(board);
+    setBoard(board, row, col);
+    setChar(board, row, col, ' ', 0);
     displayPlayerBoard(board);
     while (notGameOver == 1) {
         scanf("%i %i", &row, &col);
