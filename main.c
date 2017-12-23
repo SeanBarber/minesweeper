@@ -174,10 +174,14 @@ void setBoard(BOARD* board){
                     board->actualBoard[randRow-1][randCol-1] != ' ') {
                     board->actualBoard[randRow-1][randCol-1]++;
                 }
+            }
+            if (randRow - 1 >= 0) {
                 if (board->actualBoard[randRow-1][randCol] != 'X' &&
                     board->actualBoard[randRow-1][randCol] != ' ') {
                     board->actualBoard[randRow-1][randCol]++;
                 }
+            }
+            if (randCol - 1 >= 0) {
                 if (board->actualBoard[randRow][randCol-1] != 'X' &&
                     board->actualBoard[randRow][randCol-1] != ' ') {
                     board->actualBoard[randRow][randCol-1]++;
@@ -188,17 +192,33 @@ void setBoard(BOARD* board){
                     board->actualBoard[randRow+1][randCol+1] != ' ') {
                     board->actualBoard[randRow+1][randCol+1]++;
                 }
+            }
+            if (randRow + 1 < board->rows) {
                 if (board->actualBoard[randRow+1][randCol] != 'X' &&
                     board->actualBoard[randRow+1][randCol] != ' ') {
                     board->actualBoard[randRow+1][randCol]++;
                 }
+            }
+            if (randCol + 1 < board->cols) {
                 if (board->actualBoard[randRow][randCol+1] != 'X' &&
                     board->actualBoard[randRow][randCol+1] != ' ') {
                     board->actualBoard[randRow][randCol+1]++;
                 }
             }
-        }
+            if (randRow - 1 >= 0 && randCol + 1 < board->cols) {
+                if (board->actualBoard[randRow-1][randCol+1] != 'X' &&
+                    board->actualBoard[randRow-1][randCol+1] != ' ') {
+                    board->actualBoard[randRow-1][randCol+1]++;
+                }
+            }
+            if (randRow + 1 < board->rows && randCol - 1 >= 0) {
+                if (board->actualBoard[randRow+1][randCol-1] != 'X' &&
+                    board->actualBoard[randRow+1][randCol-1] != ' ') {
+                    board->actualBoard[randRow+1][randCol-1]++;
+                }
+            }
         mines--;
+        }
     }
     //TODO: set area around mines to certain the number of spaces being touched
     
