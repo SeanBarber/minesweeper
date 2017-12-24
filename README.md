@@ -1,4 +1,4 @@
-#Impossible Minesweeper
+Impossible Minesweeper
 =======================
 This is an implementation of the classic Minesweeper game. 100% of the project is written in C.
 
