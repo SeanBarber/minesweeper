@@ -265,7 +265,6 @@ int main(){
     scanf("%i %i", &row, &col);
     setBoard(board, row, col);
     setChar(board, row, col, ' ', 0);
-    displayActualBoard(board);
     displayPlayerBoard(board);
     while (notGameOver == 1) {
         scanf("%i %i", &row, &col);
