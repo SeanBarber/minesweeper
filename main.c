@@ -258,13 +258,18 @@ int main(){
     srand(time(0));
     BOARD* board = initBoard(getBoardCreationInput("rows"), getBoardCreationInput("columns"), getBoardCreationInput("difficulty"));
     displayPlayerBoard(board);
-    char* inputString;
-    char* parsedInput;
+    char inputString[10];
+    char *parsedInput;
     int row = 0, col = 0;
     int notGameOver = 1;
-    scanf("%i %i", &row, &col);
-    setBoard(board, row, col);
-    setChar(board, row, col, ' ', 0);
+    printf("Enter input: ");
+    fflush(stdin);
+    fgets(inputString, 10, stdin);
+    printf("\n");
+    //parsedInput = strtok(inputString, " \n");
+    //printf("%s\n", parsedInput);
+    setBoard(board, 0, 0);
+    setChar(board, 0, 0, ' ', 0);
     displayPlayerBoard(board);
     while (notGameOver == 1) {
         scanf("%i %i", &row, &col);
