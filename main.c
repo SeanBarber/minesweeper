@@ -9,6 +9,8 @@ typedef struct board{
 	int rows;
 	int cols;
 	int difficultyLevel;
+    int mines;
+    int squaresUncovered;
 }BOARD;
 
 BOARD* initBoard(int rows, int cols, int difficultyLevel){
@@ -16,6 +18,7 @@ BOARD* initBoard(int rows, int cols, int difficultyLevel){
 	board->rows = rows;
 	board->cols = cols;
 	board->difficultyLevel = difficultyLevel;
+    board->mines = 0;
 	board->playerBoard = malloc(sizeof(char*) * rows);
     board->actualBoard = malloc(sizeof(char*) * rows);
 	int i, j;
@@ -129,6 +132,7 @@ void setChar(BOARD* board, int row, int col, char character, int characterExists
         board->playerBoard[row][col] = character;
         board->actualBoard[row][col] = character;
     }
+    board->squaresUncovered++;
 }
 
 /*
@@ -146,7 +150,7 @@ int getBoardCreationInput(char* string){
             printf("Enter a level of difficulty between 1 and 10: ");
         }
         else{
-            printf("Enter the number of %s between 1 and 99: ", string);
+            printf("Enter the number of %s between 10 and 99: ", string);
         }
         scanf("%s", inputString);
         inputNum = atoi(inputString);
@@ -159,8 +163,8 @@ int getBoardCreationInput(char* string){
             }
         }
         else{
-            if(inputNum < 1 || inputNum > 99){
-                printf("Enter a %s size between 1 and 99.\n", string);
+            if(inputNum < 10 || inputNum > 99){
+                printf("Enter a %s size between 10 and 99.\n", string);
             }
             else{
                 notValid = 0;
@@ -175,6 +179,7 @@ void setBoard(BOARD* board, int row, int col){
     if (board->difficultyLevel == 1) {
         mines -= 25;
     }
+    board->mines = mines;
     int randRow, randCol;
     while (mines != 0) {
         randRow = rand() % board->rows;
@@ -237,35 +242,20 @@ void setBoard(BOARD* board, int row, int col){
         mines--;
         }
     }
-    //TODO: set area around mines to certain the number of spaces being touched
-    
-    /*
-     0  1 2 3 4 5 6 7 8 9 10
-     1  0 X 0 0 0 0 0 0 0 0
-     2  0 0 0 0 X 0 0 X 0 0
-     3  0 0 0 X 0 0 0 X 0 X
-     4  X X 0 0 0 0 0 0 X 0
-     5  0 0 0 0 0 0 0 0 0 0
-     6  X 0 X 0 0 0 0 X 0 X
-     7  0 0 0 0 X 0 0 0 0 0
-     8  0 0 0 0 0 0 0 0 X 0
-     9  X 0 0 0 0 0 0 X 0 X
-     10 0 0 X 0 0 0 0 0 0 0
-     For checking around mine 5 2, check:
-        4 1
-        5 1
-        6 1
-        4 2
-        6 2
-        4 3
-        5 3
-        6 3
-     */
 }
 
+void checkWin(BOARD* board){
+    int totalSquares = (board->rows * board->cols) - board->mines;
+    if (board->squaresUncovered == totalSquares) {
+        printf("You win!\n");
+        displayPlayerBoard(board);
+        displayActualBoard(board);
+        exit(0);
+    }
+}
 
 int main(){
-    srand(time(NULL));
+    srand(time(0));
     BOARD* board = initBoard(getBoardCreationInput("rows"), getBoardCreationInput("columns"), getBoardCreationInput("difficulty"));
     displayPlayerBoard(board);
     char* inputString;
@@ -275,10 +265,12 @@ int main(){
     scanf("%i %i", &row, &col);
     setBoard(board, row, col);
     setChar(board, row, col, ' ', 0);
+    displayActualBoard(board);
     displayPlayerBoard(board);
     while (notGameOver == 1) {
         scanf("%i %i", &row, &col);
         setChar(board, row, col, ' ', 0);
+        checkWin(board);
         displayPlayerBoard(board);
     }
 	return 0;
