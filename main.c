@@ -181,6 +181,7 @@ void setBoard(BOARD* board, int row, int col){
     }
     board->mines = mines;
     int randRow, randCol;
+    printf("Total mines = %d\n", mines);
     while (mines != 0) {
         randRow = rand() % board->rows;
         randCol = rand() % board->cols;
@@ -188,8 +189,7 @@ void setBoard(BOARD* board, int row, int col){
             randCol == col) {
             continue;
         }
-        if (board->actualBoard[randRow][randCol] != ' ' &&
-            board->actualBoard[randRow][randCol] != 'X') {
+        if (board->actualBoard[randRow][randCol] == '0') {
             board->actualBoard[randRow][randCol] = 'X';
             if (randRow - 1 >= 0 && randCol - 1 >= 0) {
                 if (board->actualBoard[randRow-1][randCol-1] != 'X' &&
@@ -239,6 +239,8 @@ void setBoard(BOARD* board, int row, int col){
                     board->actualBoard[randRow+1][randCol-1]++;
                 }
             }
+            printf("Row = %d\n", randRow);
+            printf("Col = %d\n", randCol);
         mines--;
         }
     }
@@ -262,14 +264,9 @@ int main(){
     char *parsedInput;
     int row = 0, col = 0;
     int notGameOver = 1;
-    printf("Enter input: ");
-    fflush(stdin);
-    fgets(inputString, 10, stdin);
-    printf("\n");
-    //parsedInput = strtok(inputString, " \n");
-    //printf("%s\n", parsedInput);
-    setBoard(board, 0, 0);
-    setChar(board, 0, 0, ' ', 0);
+    scanf("%i %i", &row, &col);
+    setBoard(board, row, col);
+    setChar(board, row, col, ' ', 0);
     displayPlayerBoard(board);
     while (notGameOver == 1) {
         scanf("%i %i", &row, &col);
