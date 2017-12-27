@@ -239,8 +239,6 @@ void setBoard(BOARD* board, int row, int col){
                     board->actualBoard[randRow+1][randCol-1]++;
                 }
             }
-            printf("Row = %d\n", randRow);
-            printf("Col = %d\n", randCol);
         mines--;
         }
     }
